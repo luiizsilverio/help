@@ -1,4 +1,4 @@
-package com.help;
+package com.luiizsilverio.help;
 
 import android.os.Build;
 import android.os.Bundle;
