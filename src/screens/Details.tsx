@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { VStack, Text, HStack, useTheme, ScrollView } from "native-base";
-import { useRoute } from "@react-navigation/native";
+import { Alert } from "react-native";
+import { VStack, Text, HStack, useTheme, ScrollView, Box } from "native-base";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import firestore from '@react-native-firebase/firestore';
-import { CircleWavyCheck, Hourglass, DesktopTower, Clipboard } from "phosphor-react-native";
+import { CircleWavyCheck, Hourglass, DesktopTower, ClipboardText } from "phosphor-react-native";
 
 import { OrderProps } from "../components/Order";
 import { OrderDTO } from "../DTOs/OrderDTO";
@@ -27,9 +28,35 @@ export function DetailsScreen() {
   const [order, setOrder] = useState<OrderDetails>({} as OrderDetails);
   const [solution, setSolution] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigation = useNavigation()
+  const { colors } = useTheme();
   const route = useRoute();
   const { orderId } = route.params as RouteParams;
-  const { colors } = useTheme();
+
+  function handleOrderClose() {
+    if (!solution) {
+      return Alert.alert('Solicitação', 'Informe a solução');
+    }
+
+    firestore()
+      .collection<OrderDTO>('orders')
+      .doc(orderId)
+      .update({
+        status: 'closed',
+        solution,
+        closed_at: firestore.FieldValue.serverTimestamp()
+      })
+      .then(() => {
+        Alert.alert('Solicitação', 'Solicitação encerrada.');
+        navigation.goBack();
+      })
+      .catch((err) => {
+        console.log(err);
+        Alert.alert('Solicitação', 'Erro ao encerrar a solicitação');
+      });
+
+  }
 
   useEffect(() => {
     firestore()
@@ -61,7 +88,9 @@ export function DetailsScreen() {
 
   return (
     <VStack flex={1} bg="gray.700">
-      <Header title="Solicitação" />
+      <Box px={6} bg="gray.600">
+        <Header title="Solicitação" />
+      </Box>
 
       <HStack bg="gray.500" justifyContent="center" p={4}>
         {
@@ -86,29 +115,33 @@ export function DetailsScreen() {
           title="equipamento"
           description={`Patrimônio ${order.patrimony}`}
           icon={DesktopTower}
-          footer={order.when}
-        />
+          />
 
         <CardDetails
           title="descrição do problema"
           description={order.description}
-          icon={Clipboard}
+          icon={ClipboardText}
+          footer={`Registrado em ${order.when}`}
         />
 
         <CardDetails
           title="solução"
           icon={CircleWavyCheck}
+          description={order.solution}
           footer={order.closed && `Encerrado em ${order.closed}`}
         >
-          <Input
-            bg="gray.600" h={24}
-            placeholder="Descrição da solução"
-            onChangeText={setSolution}
-            textAlignVertical="top"
-            multiline
-            spellCheck={false}
-            autoComplete="off"
-          />
+          {
+            order.status === 'open' &&
+              <Input
+                bg="gray.600" h={24}
+                placeholder="Descrição da solução"
+                onChangeText={setSolution}
+                textAlignVertical="top"
+                multiline
+                spellCheck={false}
+                autoComplete="off"
+              />
+          }
         </CardDetails>
       </ScrollView>
 
@@ -116,6 +149,7 @@ export function DetailsScreen() {
         order.status === 'open' &&
           <Button
             title="Encerrar solicitação" m={5}
+            onPress={handleOrderClose}
           />
       }
     </VStack>
