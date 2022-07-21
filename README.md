@@ -1,4 +1,4 @@
-![](https://github.com/luiizsilverio/help/blob/main/src/assets/logo_secondary.svg)
+![](https://github.com/luiizsilverio/help/blob/master/src/assets/logo_secondary.svg)
 
 ## Conteúdo
 * [Sobre o Projeto](#sobre-o-projeto)
@@ -9,7 +9,7 @@
 * [Contato](#email-contato)
 
 ## Sobre o projeto
-Aplicação desenvolvida em React Native durante o evento __Ignite Lab 2__, da __Rocketseat__, com o professor Rodrigo Gonçalves.<br />
+Aplicação desenvolvida em React Native durante o evento __Ignite Lab__, da __Rocketseat__, com o professor Rodrigo Gonçalves.<br />
 Trata-se de um controle de chamados, que são abertos e posteriormente finalizados, com a solução do problema.<br />
 Utiliza autenticação Firebase e banco de dados __FireStore__. Além disso, utiliza __NativeBase__ para estilização das telas.<br />
 
@@ -23,7 +23,7 @@ Utiliza autenticação Firebase e banco de dados __FireStore__. Além disso, uti
 * Ícones com __Phosphor-icons__
 
 ## :camera_flash: Screenshots
-![](https://github.com/luiizsilverio/help/blob/main/assets/help.gif)
+![](https://github.com/luiizsilverio/help/blob/master/src/assets/help.gif)
 
 ## :car: Iniciando o projeto
 * Baixe o repositório com ``` git clone ``` e entre na pasta do projeto.
